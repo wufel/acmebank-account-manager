@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  title: Acmebank Account Manager API
+  version: 1.0.0
+paths:
+  /accounts/balances/{id}:
+    get:
+      summary: get account balance according to account ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the account balance to retrieve
+          schema:
+            type: integer
+
+      responses:
+        '200':
+          description: account balance retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountBalanceResponse'
+        '404':
+          description: account balance not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        'default':
+          description: default
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+  /accounts/fund-transfers:
+    post:
+      summary: execute fund transfer between 2 accounts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FundTransferRequest'
+      responses:
+        '200':
+          description: fund transfer executed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundTransferResponse'
+        '400':
+          description: Invalid request payload
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        'default':
+          description: default
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+components:
+  schemas:
+    AccountBalanceResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        balance:
+          type: number
+    FundTransferRequest:
+      type: object
+      properties:
+        source-account-id:
+          type: string
+        destination-account-id:
+          type: string
+        amount:
+          type: number
+      required:
+        - source-account-id
+        - destination-account-id
+        - amount
+    FundTransferResponse:
+      type: object
+      properties:
+        source-account-id:
+          type: string
+        destination-account-id:
+          type: string
+        amount:
+          type: number
+        status:
+          type: string
+          enum: [SUCCESS, FAILED]
+        error-message:
+          type: string
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+        error-message:
+          type: string

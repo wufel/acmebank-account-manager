@@ -44,7 +44,7 @@ public class AccountsControllerTest {
         Account account = Account.builder().accountId(accountId).balance(balance).build();
         when(accountService.getAccount(accountId)).thenReturn(account);
 
-        MvcResult result = this.mockMvc.perform(get("/accounts/balances/{id}", accountId))
+        MvcResult result = this.mockMvc.perform(get("/accounts/{id}/balance", accountId))
                 .andExpect(status().isOk())
                 .andReturn();
         AccountBalanceResponse accountReturn = mapper.readValue(result.getResponse().getContentAsString(), AccountBalanceResponse.class);
@@ -54,7 +54,7 @@ public class AccountsControllerTest {
     @Test
     void testGetAccountBalanceNotFound() throws Exception {
         when(accountService.getAccount(any())).thenThrow(new AccountNotFoundException("1"));
-        this.mockMvc.perform(get("/accounts/balances/{id}", "1"))
+        this.mockMvc.perform(get("/accounts/{id}/balance", "1"))
                 .andExpect(status().isNotFound());
     }
 
@@ -99,7 +99,7 @@ public class AccountsControllerTest {
         this.mockMvc.perform(post("/accounts/fund-transfers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(fundTransferRequest)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
@@ -112,7 +112,7 @@ public class AccountsControllerTest {
         this.mockMvc.perform(post("/accounts/fund-transfers")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsString(fundTransferRequest)))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test

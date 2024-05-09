@@ -20,7 +20,7 @@ public class AccountsController implements AccountsApi {
     private final AccountService accountService;
 
     @Override
-    public ResponseEntity<AccountBalanceResponse> accountsBalancesIdGet(String id) {
+    public ResponseEntity<AccountBalanceResponse> accountsIdBalanceGet(String id) {
         log.info("get account balance request received for accountId={}", id);
         Account account = accountService.getAccount(id);
         AccountBalanceResponse accountBalanceResponse = new AccountBalanceResponse(account.getAccountId(), account.getBalance());
@@ -31,6 +31,7 @@ public class AccountsController implements AccountsApi {
     public ResponseEntity<FundTransferResponse> accountsFundTransfersPost(FundTransferRequest fundTransferRequest) {
         log.info("account transfer request {} received", fundTransferRequest);
         accountService.fundTransfer(fundTransferRequest.getSourceAccountId(), fundTransferRequest.getDestinationAccountId(), fundTransferRequest.getAmount());
+        log.info("transfer request success from account {} to account{}.", fundTransferRequest.getSourceAccountId(), fundTransferRequest.getDestinationAccountId());
         FundTransferResponse fundTransferResponse = new FundTransferResponse(fundTransferRequest.getSourceAccountId(),
                 fundTransferRequest.getDestinationAccountId(),
                 fundTransferRequest.getAmount(),

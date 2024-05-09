@@ -3,14 +3,14 @@ info:
   title: Acmebank Account Manager API
   version: 1.0.0
 paths:
-  /accounts/balances/{id}:
+  /accounts/{id}/balance:
     get:
-      summary: get account balance according to account ID
+      summary: retrieve account balance according to account ID
       parameters:
         - name: id
           in: path
           required: true
-          description: ID of the account balance to retrieve
+          description: ID of the bank account
           schema:
             type: string
       responses:
@@ -59,13 +59,19 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FundTransferResponse'
+                $ref: '#/components/schemas/ApiError'
         '404':
           description: account not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        '422':
+          description: Invalid amount or insufficient funds in account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FundTransferResponse'
         '500':
           description: Internal server error
           content:

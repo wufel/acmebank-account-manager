@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.*;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -28,7 +27,7 @@ public class GlobalExceptionHandler {
     ResponseEntity<FundTransferResponse> handlesInsufficientFUndException(FundTransferFailureException e) {
         FundTransferResponse failedTransferResponse = new FundTransferResponse(e.getSourceAccountId(), e.getDestinationAccountId(), e.getTransferAmount(), FundTransferResponse.StatusEnum.FAILED);
         failedTransferResponse.setErrorMessage(e.getMessage());
-        return ResponseEntity.status(BAD_REQUEST).body(failedTransferResponse);
+        return ResponseEntity.status(UNPROCESSABLE_ENTITY).body(failedTransferResponse);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class})
